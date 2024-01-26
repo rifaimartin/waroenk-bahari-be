@@ -1,5 +1,3 @@
-Here's a possible README.md file for your SpringBoot project:
-
 # WMB Backend
 
 This is a mini project built using SpringBoot framework. It includes the following features:
