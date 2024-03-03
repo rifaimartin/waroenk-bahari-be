@@ -43,7 +43,7 @@ public class MenuController {
         return menuService.getMenuById(id);
     }
 
-    @GetMapping("/menus")
+    @GetMapping("/getAllMenu")
     public List<Menu> getAllMenu(){
         return menuService.getAllMenu();
     }
