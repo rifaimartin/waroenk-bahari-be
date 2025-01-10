@@ -1,21 +1,21 @@
-# Use a specific JDK 8 image that works well with Lombok
-FROM maven:3.6.3-jdk-8
+# Stage 1: Build the application
+FROM maven:3.6.3-jdk-8 AS build
 
 # Set working directory
 WORKDIR /app
 
-# Copy the project files
-COPY . .
+# Copy source code
+COPY pom.xml .
+COPY src ./src
 
-# Add Maven settings to fix Lombok
-COPY settings.xml /root/.m2/settings.xml
+# Build the application
+RUN mvn clean package -DskipTests
 
-# Build with specific Maven options
-RUN mvn clean package -DskipTests -Dmaven.compiler.fork=true \
-    -Dmaven.compiler.source=1.8 \
-    -Dmaven.compiler.target=1.8
-
-# Run stage
+# Stage 2: Create the runtime image
 FROM openjdk:8-jre-slim
-COPY --from=0 /app/target/*.jar app.jar
+
+# Copy JAR file from build stage
+COPY --from=build /app/target/*.jar app.jar
+
+# Run the application
 ENTRYPOINT ["java", "-jar", "/app.jar"]
